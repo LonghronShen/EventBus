@@ -33,15 +33,13 @@ namespace Sino.EventBus
 
 			//释放ABP自带的EventBus
 			var releaseEventBus = IocManager.Instance.Resolve<IEventBus>();
-			IocManager.Instance.Release(releaseEventBus);
 
-			//加载第三方EventBus
-			if (!IocManager.Instance.IsRegistered<IEventBus>())
-			{
-				IocManager.Instance.IocContainer.Register(
-					Component.For<IEventBus>().UsingFactoryMethod(() => eventBusExtensions)
-				);
-			}
+			IocManager.Instance.IocContainer.Register(
+				Component.For<IEventBus>().
+				Instance(eventBusExtensions).
+				IsDefault().
+				Named("Sino.EventBus")
+			);
 			eventBusExtensions.Start();
 		}
 	}
